@@ -1,0 +1,73 @@
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { ModuleFederationPlugin } = require('webpack').container;
+
+module.exports = {
+    mode: 'development',
+    entry: './src/index.js',
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'dist'),
+        },
+        port: 3001,
+    },
+    output: {
+        publicPath: 'http://localhost:3001/',
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'bundle.js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react'],
+                        overrides: [
+                            {
+                                test: /\.js$/i,
+                                compact: false,
+                            },
+                        ]
+                    },
+                },
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+            },
+        ],
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './public/index.html',
+            filename: 'index.html',
+        }),
+        new ModuleFederationPlugin({
+            name: 'dashboard',
+            filename: 'remoteEntry.js',
+            exposes: {
+                './Dashboard': './src/pages/Dashboard.jsx',
+                './Card': './src/utils/Card.jsx',
+            },
+            shared: {
+                react: {
+                    singleton: true,
+                    requiredVersion: '^19.1.0',
+                },
+                'react-dom': {
+                    singleton: true,
+                    requiredVersion: '^19.1.0',
+                },
+            },
+        }),
+    ],
+    resolve: {
+        extensions: ['.js', '.jsx'],
+        alias: {
+            '@': path.resolve(__dirname, 'src/'),
+        },
+    }
+}
