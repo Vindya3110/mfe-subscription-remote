@@ -7,19 +7,20 @@ module.exports = {
     entry: './src/index.js',
     devServer: {
         static: {
-            directory: path.join(__dirname, 'dist'),
+            directory: path.join(__dirname, '../dist'),
         },
         port: 3001,
+        hot: true,
     },
     output: {
         publicPath: 'http://localhost:3001/',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '../dist'),
         filename: 'bundle.js',
     },
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(js|jsx)$/i,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
@@ -27,10 +28,10 @@ module.exports = {
                         presets: ['@babel/preset-env', '@babel/preset-react'],
                         overrides: [
                             {
-                                test: /\.js$/i,
+                                test: /\.(js|jsx)$/i,
                                 compact: false,
                             },
-                        ]
+                        ],
                     },
                 },
             },
@@ -56,10 +57,12 @@ module.exports = {
                 react: {
                     singleton: true,
                     requiredVersion: '^19.1.0',
+                    eager: true,
                 },
                 'react-dom': {
                     singleton: true,
                     requiredVersion: '^19.1.0',
+                    eager: true,
                 },
             },
         }),
@@ -67,7 +70,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx'],
         alias: {
-            '@': path.resolve(__dirname, 'src/'),
+            '@': path.resolve(__dirname, '../src/'), // fixed path
         },
-    }
-}
+    },
+};
