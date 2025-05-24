@@ -50,8 +50,9 @@ module.exports = {
             name: 'dashboard',
             filename: 'remoteEntry.js',
             exposes: {
-                './Dashboard': './src/pages/Dashboard.jsx',
                 './Card': './src/utils/Card.jsx',
+                './ModemAuthorization': './src/components/ModemAuthorization.jsx',
+                './SecurityPackage': './src/components/SecurityPackage.jsx',
             },
             shared: {
                 react: {
